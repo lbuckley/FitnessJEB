@@ -7,11 +7,100 @@ library(MCMCglmm) #for rtnorm function
 
 count=function(x){length(na.omit(x))}
 
+#-------------------------
+#Fitness functions
+
+#Buckley and Huey SICB
+#We estimate fitness as the product of fecundity and survival. 
+#Fecundity is quantified as the sum of performance across time steps within a generation, and we assume low but non-zero performance outside the critical thermal limits. 
+#We assumed that the probability of survival through a thermal stress event declined exponentially to zero between CTmax and 60 °C. 
+
+
+#START MORTALITY BEFORE CTmax?
+#survival and fecundity  #SURVIVAL COST ABOVE AND BELOW CTmax
+#Survival
+
+#Need sensitivity analysis
+surv<- function(T, CTmin, CTmax, td=4.34){ 
+  #10 to 90% of CT range
+  CTmin1= CTmin #CTmin+(CTmax-CTmin)*0.1
+  CTmax1= CTmax-10 #CTmin+(CTmax-CTmin)*0.8
+  
+  s1= ifelse(T<CTmax1, s<-1, s<- exp(-(T-CTmax1)/td) )
+  s2= ifelse(T>CTmin1, s<-1, s<- exp(-(CTmin1-T)/td) )
+  s= s1*s2
+  return( s*0.8 )
+}
+plot(0:70, surv(0:70, 10, 60), type="l")
+
+#Model thermoregulation toward Topt
+thermoreg.mat<- function(t.mat, Topt){
+  Te_sun=t.mat[1]; Te_sh=t.mat[2] 
+  To=NA
+  if( !is.na(Te_sun) && !is.na(Te_sh)){
+    ts= seq(t.mat[2], t.mat[1], 0.1) 
+    To= ts[which.min(abs(ts-Topt))]}
+  return(To)
+}
+
+#Deutsch et al. TPC
+#Performance Curve Function from Deutsch et al. 2008
+tpc.perf= function(T,Topt,CTmin, CTmax){
+  F=T
+  F[]=NA
+  sigma= (Topt-CTmin)/4
+  F[T<=Topt & !is.na(T)]= exp(-((T[T<=Topt & !is.na(T)]-Topt)/(2*sigma))^2) 
+  F[T>Topt & !is.na(T)]= 1- ((T[T>Topt & !is.na(T)]-Topt)/(Topt-CTmax))^2
+  #1% performance at and outside CT limits
+  F[F<=0]<-0.01
+  
+  return(F)
+}
+
+
+TPC.gausgomp= function(T, To, rho=0.9, sigma, Fmax) Fmax*exp(-exp(rho*(T-To)-6)-sigma*(T-To)^2) # rho and sigma determine, the thermal sensitivity of feeding at temperatures above and below Topt, respectively
+
 #--------------------------
 #Grasshopper data
 
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/")
 spec.dat=read.csv("SpecData.csv")
+
+# Jumping TPC parameters
+tpc.dat= read.csv("JumpTPCparams.csv")
+# or JumpModels_2019
+
+#PLOT DATA
+setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/")
+pdf("TPCFig.pdf", height = 6, width = 10)
+
+specs1= c("boulderensis","pellucida","sanguinipes")
+elevs1=c(2195,2591,3048)
+temps=0:60
+
+elev_lab= paste(elevs, "m", sep="")
+specs_lab=c("M. boulderensis", "C. pellucida", "M. sanguinipes", "A. clavatus")
+par(mfrow=c(1,3), cex=1.2, lwd=2, mar=c(1, 2.5, 2.5, 0.2), mgp=c(1.5, 0.5, 0), oma=c(2,2,2,0), bty="l")
+
+for(sp.k in 1:3){
+for(elev.k in 1:3){
+  
+  tpc= tpc.dat[which(tpc.dat$species==specs1[sp.k] & tpc.dat$elev_m==elevs1[elev.k]),]
+  if(elev.k==1) plot(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="red", ylim=range(0,0.6),xlim=range(0,60), ylab="Hopping distance (cm)", main=specs1[sp.k] )
+  if(elev.k==2) points(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="green")
+  if(elev.k==3) points(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="blue")
+  
+} #end sites
+  
+#add CTmin and CTmax  
+points(c(spec.dat[sp.k,"CTmin"],spec.dat[sp.k,"PBT"],spec.dat[sp.k,"CTmax"]  ), c(0,0,0))
+    
+} #end species
+
+#add legend
+legend(35, 0.6, legend=c("2195m", "2591m", "3048m"), col=c("red", "green", "blue"), lty=1, cex=0.8)
+
+dev.off()
 
 #------------------------------
 
@@ -55,6 +144,9 @@ dat$lat= sites$Lat[match1]
 dat$psi=zenith(dat$J, dat$lat, dat$lon, dat$hour)
 dat$psi[dat$psi>=85]=85 #set zenith position below horizon to psi=89degrees
 
+#restrict to daylight
+dat<- dat[which(dat$hour>5 & dat$hour<17),]
+
 #-----------------------------
 #Calculate mass and length, m and g? 
 dat$mass_clav= 0.42-8.15*10^-5*dat$Elev
@@ -67,62 +159,14 @@ dat$L_dodg= exp(3.33*0.247*log(dat$mass_dodg))
 dat$L_sang= exp(3.33*0.247*log(dat$mass_sang))
 
 #===============================
-#Fitness functions
 
-#Buckley and Huey SICB
-#We estimate fitness as the product of fecundity and survival. 
-#Fecundity is quantified as the sum of performance across time steps within a generation, and we assume low but non-zero performance outside the critical thermal limits. 
-#We assumed that the probability of survival through a thermal stress event declined exponentially to zero between CTmax and 60 °C. 
-
-
-#START MORTALITY BEFORE CTmax?
-#survival and fecundity  #SURVIVAL COST ABOVE AND BELOW CTmax
-#Survival
-
-surv<- function(T, CTmin, CTmax, td=4.34){ 
-  #10 to 90% of CT range
- CTmin1= CTmin+(CTmax-CTmin)*0.2
- CTmax1= CTmin+(CTmax-CTmin)*0.8
-  
-  s1= ifelse(T<CTmax1, s<-1, s<- exp(-(T-CTmax1)/td) )
-  s2= ifelse(T>CTmin1, s<-1, s<- exp(-(CTmin1-T)/td) )
-  s= s1*s2
-  return( s*0.8 )
-}
-plot(0:70, surv(0:70, 10, 60), type="l")
-
-#Model thermoregulation toward Topt
-thermoreg.mat<- function(t.mat, Topt){
-  Te_sun=t.mat[1]; Te_sh=t.mat[2] 
-  To=NA
-  if( !is.na(Te_sun) && !is.na(Te_sh)){
-  ts= seq(t.mat[2], t.mat[1], 0.1) 
-  To= ts[which.min(abs(ts-Topt))]}
-    return(To)
-}
-  
-#Deutsch et al. TPC
-#Performance Curve Function from Deutsch et al. 2008
-tpc.perf= function(T,Topt,CTmin, CTmax){
-  F=T
-  F[]=NA
-  sigma= (Topt-CTmin)/4
-  F[T<=Topt & !is.na(T)]= exp(-((T[T<=Topt & !is.na(T)]-Topt)/(2*sigma))^2) 
-  F[T>Topt & !is.na(T)]= 1- ((T[T>Topt & !is.na(T)]-Topt)/(Topt-CTmax))^2
-  #1% performance at and outside CT limits
-  F[F<=0]<-0.01
-  
-  return(F)
-}
-
-#-------------------
 site.list= c("Eldorado","A1","B1","C1")
 specs= c("clav","pell","dodg","sang")
 spec.dat=spec.dat[match(spec.dat$SpecID, specs),]
 
 #3rd dimension: Te sun, Te shade, Te thermoreg, fecund, surv
 #last dimension is individuals
-Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),5,500) ) 
+Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),6,500) ) 
 
 #Estimate Tes, fedund, and surv
     for(spec.k in 1:length(specs) ){
@@ -142,12 +186,22 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),5,500) )
     
   for(ind.k in inds){
   
-    #microcliamte variability: normal distribution centered at thermoreg temp with sd= (Te_sun-Te_shade)/4, bounded by Te_shade -5 and Te_sun +5
+    #microclimate variability: normal distribution centered at thermoreg temp with sd= (Te_sun-Te_shade)/4, bounded by Te_shade -5 and Te_sun +5
   ts= rtnorm(n=500, mean = Te.dat[ind.k,spec.k,3,1], sd = 4, lower=(Te.dat[ind.k,spec.k,2,1]-0), upper=(Te.dat[ind.k,spec.k,1,1]+0) )
   #or sd: (Te.dat[ind.k,spec.k,1,1]-Te.dat[ind.k,spec.k,2,1])/4  
   
     #Fecundity
+    #Based on CTmin, Topt, CTmax
     Te.dat[ind.k,spec.k,4,]<-tpc.perf( ts, Topt=spec.dat[spec.k,"PBT"], CTmin=spec.dat[spec.k,"CTmin"], CTmax=spec.dat[spec.k,"CTmax"])
+    
+    #Based on hopping TPC
+    if(!specs[spec.k]=="clav"){ #NOT CLAVATUS
+    ind.elev= dat[ind.k,"Elev"]
+    if(ind.elev==1708)ind.elev<-2195
+    tpc= tpc.dat[which(tpc.dat$spec==specs[spec.k] & tpc.dat$elev_m==ind.elev),]
+    
+    Te.dat[ind.k,spec.k,6,]<-TPC.gausgomp(ts, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax)
+    } #check for clavatus
     
     #Survival  
     Te.dat[ind.k,spec.k,5,]<- surv( ts, CTmin= -20, CTmax=spec.dat[spec.k,"CTmax"])  #HEAT STRESS ONLY spec.dat[spec.k,"CTmin"]
@@ -158,7 +212,7 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),5,500) )
 
 #------------------
 #ESTIMATE FITNESS
-fit= array(NA,dim=c(length(site.list),length(specs),3,500))
+fit= array(NA,dim=c(length(site.list),length(specs),5,500))
 #3rd dimension in fecund, surv, fitness
 
 for(site.k in 1:length(site.list) ){
@@ -169,9 +223,27 @@ for(site.k in 1:length(site.list) ){
 
     #estimate fitness as (sum of fecundity)(product of survival)
      fit[site.k, spec.k,1,]= colSums(Te.dat[site.inds,spec.k,4,], na.rm=TRUE) #fecund
-      fit[site.k, spec.k,2,]= colMeans(Te.dat[site.inds,spec.k,5,], na.rm=TRUE) #surv
-      fit[site.k, spec.k,3,]= fit[site.k, spec.k,1,] * fit[site.k, spec.k,2,] #fitness
+     fit[site.k, spec.k,2,]= colSums(Te.dat[site.inds,spec.k,6,], na.rm=TRUE) #fecund tpc
+     
+      fit[site.k, spec.k,3,]= colMeans(Te.dat[site.inds,spec.k,5,], na.rm=TRUE) #surv
+
 } #end species loop
+} #end site loop
+
+#scale fecundity to max
+fit[, ,1,]= fit[, ,1,] /max(fit[, ,1,], na.rm=TRUE)
+fit[, ,2,]= fit[, ,2,] /max(fit[, ,2,], na.rm=TRUE)
+
+for(site.k in 1:length(site.list) ){
+  
+  site.inds= which(dat$site==site.list[site.k])
+  
+  for(spec.k in 1:length(specs) ){
+    
+    fit[site.k, spec.k,4,]= fit[site.k, spec.k,1,] * fit[site.k, spec.k,3,] #fitness
+    fit[site.k, spec.k,5,]= fit[site.k, spec.k,2,] * fit[site.k, spec.k,3,] #fitness tpc
+    
+  } #end species loop
 } #end site loop
 
 #------------------
@@ -183,17 +255,17 @@ fit.mean= apply(fit, MARGIN=c(1,2,3), FUN=mean, na.rm=TRUE)
 #RESHAPE DATA
 elevs= c(1708,2195,2591,3048)
 
-f.dat= rbind(fit.mean[,,1],fit.mean[,,2],fit.mean[,,3])
+f.dat= rbind(fit.mean[,,1],fit.mean[,,2],fit.mean[,,3],fit.mean[,,4],fit.mean[,,5])
 colnames(f.dat)= specs
 f.dat= as.data.frame(f.dat)
-f.dat$component= c(rep("fecundity", length(site.list)), rep("survival", length(site.list)), rep("fitness", length(site.list)) )
-f.dat$site= rep(site.list, 3)
-f.dat$elev= rep(elevs, 3)
+f.dat$component= c(rep("fecundity", length(site.list)),rep("fecundity tpc", length(site.list)), rep("survival", length(site.list)), rep("fitness", length(site.list)), rep("fitness tpc", length(site.list)) )
+f.dat$site= rep(site.list, 5)
+f.dat$elev= rep(elevs, 5)
 #melt
 f.long= melt(data = f.dat, id.vars = c("component","site","elev"), measure.vars = c("clav", "pell", "dodg", "sang"))
 colnames(f.long)[4]<-"species"
 #order fitness factors
-f.long$component= factor(f.long$component, levels=c("fecundity","survival","fitness") )
+f.long$component= factor(f.long$component, levels=c("fecundity","fecundity tpc","survival","fitness", "fitness tpc") )
 
 #PLOT
 fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=species))+geom_line()+facet_wrap(~component, ncol=1, scales="free_y")+
