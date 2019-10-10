@@ -26,15 +26,23 @@ s1$surv_d= (s1$surv_e-s1$surv_c)/s1$surv_c
 
 s4$fit_d= (s4$m1i-s4$m2i)/s4$m2i
 
+#STATS
+s1$surv_d[is.infinite(s1$surv_d)]=NA
+mod.f= lm(surv_d~elevation.m., data=s1)
+
+mod.f= lm(fit_d~elevation.m., data=s4)
+
+#--------------------------
+#FIGURE
 #survival
 s.plot= ggplot(data=s1, aes(x=log(elevation.m.), y = surv_d, group=1, color=treatment))+geom_point()+ylim(-1,2)+
-  geom_smooth(method="lm",color="black",se=FALSE)+theme(legend.position = "bottom")+geom_hline(yintercept=0)+
+  geom_smooth(method="lm",color="grey",se=TRUE)+theme(legend.position = "bottom")+geom_hline(yintercept=0)+
   ylab("proportional survival change") +xlab("log(elevation) (m)")
 #omits some data
 
 #fedundity
 f.plot=ggplot(data=s4, aes(x=log(elevation.m.), y = fit_d, group=1, color=treatment))+geom_point()+ylim(-1,2)+
-  geom_smooth(method="lm",color="black",se=FALSE)+theme(legend.position = "bottom")+geom_hline(yintercept=0)+
+  geom_smooth(method="lm",color="grey",se=TRUE)+theme(legend.position = "bottom")+geom_hline(yintercept=0)+
   ylab("proportional fecundity change") +xlab("log(elevation) (m)")  
 #omits some data
 
@@ -54,7 +62,7 @@ fit= read.csv("Hargreaves_metaperfdata.csv")
 #Ov=overall fitness=combination of >1 fitness component (Em, S, R) or lifetime fitness as presented in article (see Hargreaves et al 2013 for full explanation)
 
 #RESTRICT to S, R, Ov
-fit= fit[fit$parameter %in% c("S","R","G"),]
+fit= fit[fit$parameter %in% c("S","R"),]
 fit= fit[fit$limit %in% c("high","low","equitoral","polar"),] 
 
 #limit type:	divides range limits into G=geographic, E=elevational
@@ -87,15 +95,23 @@ f.long$site[f.long$variable %in% c("i.EI")] <-"edge"
 f.long$site[f.long$variable %in% c("i.BI", "e.BE")] <-"beyond"
 
 #other variables
-f.long$site= factor(f.long$site, levels=c("int","edge","beyond"))
+f.long$site= factor(f.long$site, levels=c("interior","edge","beyond"))
 f.long$group= paste(f.long$reference, f.long$species, f.long$limit, sep="_")
 f.long$edge<-"cold limit"
 f.long$edge[f.long$limit %in% c("low","equitoral")] <-"warm limit"
 #change parameter name
 f.long$parameter.lab<-NA
-f.long$parameter.lab[f.long$parameter=="G"]<-"growth"
-f.long$parameter.lab[f.long$parameter=="R"]<-"reproduction"
+#f.long$parameter.lab[f.long$parameter=="G"]<-"growth"
+f.long$parameter.lab[f.long$parameter=="R"]<-"fecundity"
 f.long$parameter.lab[f.long$parameter=="S"]<-"survival"
+
+#STATS
+#fecundity
+mod.f= lm(value~site, data=f.long[f.long$parameter=="R" & f.long$edge=="cold limit",])
+mod.f= lm(value~site, data=f.long[f.long$parameter=="R" & f.long$edge=="warm limit",])
+#survival
+mod.s= lm(value~site, data=f.long[f.long$parameter=="S" & f.long$edge=="cold limit",])
+mod.s= lm(value~site, data=f.long[f.long$parameter=="S" & f.long$edge=="warm limit",])
 
 #---------------------------
 #FIGURE
@@ -105,7 +121,7 @@ pdf("HargreavesFig.pdf", height = 8, width = 10)
 ggplot(data=f.long, aes(x=site, y = value, color=parameter.lab, shape=source))+geom_jitter(size=2, width=0.3, height=0)+facet_grid(edge~parameter.lab) +
   geom_hline(yintercept=0)+stat_summary(fun.data=mean_sdl,fun.args = list(mult=1), geom="errorbar",width=0.2, color="black")+
   stat_summary(fun.y=mean, geom="point", color="black", size=4, shape=0) +theme(legend.position = "bottom")+guides(colour=FALSE)+ #+theme(strip.text.y = element_text(angle = 360))+stat_summary(fun.y=mean, geom="point")
-  ylim(-2.5,2.5)
+  ylim(-2.5,2.5)+ylab("fitness component value")+xlab("range position")
   dev.off()
 
 #==============================

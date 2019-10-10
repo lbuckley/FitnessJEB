@@ -186,7 +186,7 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),6,500) )
     
   for(ind.k in inds){
   
-    #microclimate variability: normal distribution centered at thermoreg temp with sd= (Te_sun-Te_shade)/4, bounded by Te_shade -5 and Te_sun +5
+    #microclimate variability: normal distribution centered at thermoreg temp with sd= (Te_sun-Te_shade)/4, bounded by Te_shade and Te_sun
   ts= rtnorm(n=500, mean = Te.dat[ind.k,spec.k,3,1], sd = 4, lower=(Te.dat[ind.k,spec.k,2,1]-0), upper=(Te.dat[ind.k,spec.k,1,1]+0) )
   #or sd: (Te.dat[ind.k,spec.k,1,1]-Te.dat[ind.k,spec.k,2,1])/4  
   
