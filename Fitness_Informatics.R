@@ -85,7 +85,7 @@ fit= fit[fit$limit %in% c("high","low","equitoral","polar"),]
 #melt
 f.long= melt(data = fit, id.vars = c("reference","species","organism","limit.type","limit","parameter"), measure.vars = c("i.BI", "i.EI", "i.BE", "e.BI", "e.IE", "e.BE"))
 #drop extra comparisons
-f.long= f.long[f.long$variable %in% c("i.EI","i.BI","e.IE"), ] #drop edge to beyond: "e.BE"
+f.long= f.long[f.long$variable %in% c("i.EI","i.BI","e.BE"), ] #drop e.IE, keep edge to beyond: "e.BE"
 
 f.long$source<-"interior"
 f.long$source[f.long$variable %in% c("e.IE","e.BE")] <-"edge"
@@ -116,13 +116,17 @@ mod.s= lm(value~site, data=f.long[f.long$parameter=="S" & f.long$edge=="warm lim
 #---------------------------
 #FIGURE
 
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/meta_data/")
-pdf("HargreavesFig.pdf", height = 8, width = 10)
-ggplot(data=f.long, aes(x=site, y = value, color=parameter.lab, shape=source))+geom_jitter(size=2, width=0.3, height=0)+facet_grid(edge~parameter.lab) +
+#just beyond
+f.long2= subset(f.long, f.long$site=="beyond")
+#separate geographic / elevation
+
+#setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/meta_data/")
+#pdf("HargreavesFig.pdf", height = 8, width = 10)
+ggplot(data=f.long2, aes(x=limit.type, y = value, color=parameter.lab, shape=source))+geom_jitter(size=2, width=0.3, height=0)+facet_grid(edge~parameter.lab) +
   geom_hline(yintercept=0)+stat_summary(fun.data=mean_sdl,fun.args = list(mult=1), geom="errorbar",width=0.2, color="black")+
   stat_summary(fun.y=mean, geom="point", color="black", size=4, shape=0) +theme(legend.position = "bottom")+guides(colour=FALSE)+ #+theme(strip.text.y = element_text(angle = 360))+stat_summary(fun.y=mean, geom="point")
   ylim(-2.5,2.5)+ylab("fitness component value")+xlab("range position")
-  dev.off()
+#  dev.off()
 
 #==============================
 #ANIMALS
