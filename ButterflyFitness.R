@@ -1,4 +1,10 @@
 library(ggplot2)
+library(cowplot)
+library(reshape2)
+
+years= 1950:2099
+#absorptivity
+aseq= seq(0.4,0.7,0.05)
 
 #CHOOSE PROJECTION
 proj.k=2 #1: bcc-csm1-1.1.rcp60, 2: ccsm4.1.rcp60, 3: gfdl-cm3.1.rcp60
@@ -19,14 +25,49 @@ pts= read.csv(paste("COpoints_",projs[proj.k],".rds",sep=""))
 #--------------------
 #For given time period, plot FAT and ev.ind across elevation
 
+fec= lambda[50, , 3, 2, 2]
+surv= lambda[50, , 3, 2, 3]
+dat1= cbind(pts, fec, surv)
+dat1$year= 50
+dat1$abs=3
+
 fec= lambda[150, , 3, 2, 2]
 surv= lambda[150, , 3, 2, 3]
-dat= cbind(pts, fec, surv)
+dat2= cbind(pts, fec, surv)
+dat2$year= 150
+dat2$abs=3
 
-ggplot(data=dat, aes(x=elev, y=fec))+geom_point()
-ggplot(data=dat, aes(x=elev, y=surv))+geom_point()
+fec= lambda[50, , 6, 2, 2]
+surv= lambda[50, , 6, 2, 3]
+dat3= cbind(pts, fec, surv)
+dat3$year= 50
+dat3$abs=6
 
-#PLOT OUT TWO TIME PERIODS
-#TWO ABSORPTIVITIES?
-#GENERATIONS?
+fec= lambda[150, , 6, 2, 2]
+surv= lambda[150, , 6, 2, 3]
+dat4= cbind(pts, fec, surv)
+dat4$year= 150
+dat4$abs=6
+
+dat=rbind(dat1, dat2, dat3, dat4)
+#combine surv and fecundity
+ldat= melt(dat, id.vars = c("lon","lat","lon.ind","lat.ind","ind","elev","airpr","year","abs"), measure.vars = c("fec", "surv"))
+ldat=na.omit(ldat)
+ldat$absorp= paste("wing absorptivity=", aseq[ldat$abs])
+ldat$fitcomp= "flight activity time (hr)"
+ldat$fitcomp[ldat$variable=="surv"]= "egg viability (%)"
+ldat$fitcomp= ordered(ldat$fitcomp, levels=c("flight activity time (hr)","egg viability (%)") )
+ldat$year= years[ldat$year]
+ldat$year= as.factor(ldat$year)
+
+#plot
+setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/")
+pdf("ButterflyFig.pdf", height = 8, width = 8)
+ggplot(data=ldat, aes(x=elev, y=value, color=year))+geom_point()+facet_grid(fitcomp~absorp, scales="free")+
+  ylab("fitness component")+xlab("elevation (m)")+geom_smooth(method="loess",se=FALSE, aes(group=year))+theme_bw(base_size = 16)+
+  theme(legend.position="bottom")+
+  scale_color_viridis(discrete=TRUE) 
+dev.off()
+
+
 

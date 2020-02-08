@@ -15,7 +15,6 @@ count=function(x){length(na.omit(x))}
 #Fecundity is quantified as the sum of performance across time steps within a generation, and we assume low but non-zero performance outside the critical thermal limits. 
 #We assumed that the probability of survival through a thermal stress event declined exponentially to zero between CTmax and 60 °C. 
 
-
 #START MORTALITY BEFORE CTmax?
 #survival and fecundity  #SURVIVAL COST ABOVE AND BELOW CTmax
 #Survival
@@ -23,8 +22,8 @@ count=function(x){length(na.omit(x))}
 #Need sensitivity analysis
 surv<- function(T, CTmin, CTmax, td=4.34){ 
   #10 to 90% of CT range
-  CTmin1= CTmin #CTmin+(CTmax-CTmin)*0.1
-  CTmax1= CTmax-10 #CTmin+(CTmax-CTmin)*0.8
+  CTmin1= CTmin+(CTmax-CTmin)*0.2
+  CTmax1= CTmin+(CTmax-CTmin)*0.8
   
   s1= ifelse(T<CTmax1, s<-1, s<- exp(-(T-CTmax1)/td) )
   s2= ifelse(T>CTmin1, s<-1, s<- exp(-(CTmin1-T)/td) )
@@ -149,10 +148,10 @@ dat<- dat[which(dat$hour>5 & dat$hour<17),]
 
 #-----------------------------
 #Calculate mass and length, m and g? 
-dat$mass_clav= 0.42-8.15*10^-5*dat$Elev
-dat$mass_pell= 0.77-1.48*10^-4*dat$Elev
-dat$mass_dodg= 1-1.64*10^-4*dat$Elev
-dat$mass_sang= 0.456-2.74*10^-5*dat$Elev
+dat$mass_clav= 0.42-8.15*10^-5*2591 #*dat$Elev
+dat$mass_pell= 0.77-1.48*10^-4*2591 #*dat$Elev
+dat$mass_dodg= 1-1.64*10^-4*2591 #*dat$Elev
+dat$mass_sang= 0.456-2.74*10^-5*2591 #*dat$Elev
 dat$L_clav=  exp(3.33*0.247*log(dat$mass_clav)) #in mm
 dat$L_pell= exp(3.33*0.247*log(dat$mass_pell))
 dat$L_dodg= exp(3.33*0.247*log(dat$mass_dodg))
@@ -179,7 +178,7 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),6,500) )
     Te.dat[,spec.k,2,1]<-biophys(Ta=dat$SoilTemp, J=dat$J, Wind=dat$Wind, Rad=0, kt=1, psi_deg=dat$psi, L=dat[,(25+spec.k)], Acondfact=0.0)
    
     #Te thermoreg
-    Te.dat[,spec.k,3,1]<-apply(cbind(Te.dat[,spec.k,1,1],Te.dat[,spec.k,2,1]), FUN=thermoreg.mat, Topt=spec.dat[spec.k,"PBT"], MARGIN=1)
+    Te.dat[,spec.k,3,1]<- apply(cbind(Te.dat[,spec.k,1,1],Te.dat[,spec.k,2,1]), FUN=thermoreg.mat, Topt=spec.dat[spec.k,"PBT"], MARGIN=1)
 
     #simulate 500 individuals
   inds= which(!is.na(Te.dat[,spec.k,3,1]))
@@ -187,7 +186,7 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),6,500) )
   for(ind.k in inds){
   
     #microclimate variability: normal distribution centered at thermoreg temp with sd= (Te_sun-Te_shade)/4, bounded by Te_shade and Te_sun
-  ts= rtnorm(n=500, mean = Te.dat[ind.k,spec.k,3,1], sd = 4, lower=(Te.dat[ind.k,spec.k,2,1]-0), upper=(Te.dat[ind.k,spec.k,1,1]+0) )
+  ts= rtnorm(n=500, mean = Te.dat[ind.k,spec.k,3,1], sd = 8, lower=(Te.dat[ind.k,spec.k,2,1]-0), upper=(Te.dat[ind.k,spec.k,1,1]+0) )
   #or sd: (Te.dat[ind.k,spec.k,1,1]-Te.dat[ind.k,spec.k,2,1])/4  
   
     #Fecundity
@@ -198,13 +197,13 @@ Te.dat= array(data = NA, dim = c(nrow(dat),length(specs),6,500) )
     if(!specs[spec.k]=="clav"){ #NOT CLAVATUS
     ind.elev= dat[ind.k,"Elev"]
     if(ind.elev==1708)ind.elev<-2195
-    tpc= tpc.dat[which(tpc.dat$spec==specs[spec.k] & tpc.dat$elev_m==ind.elev),]
+    tpc= tpc.dat[which(tpc.dat$spec==specs[spec.k] & tpc.dat$elev_m==2591),]  ##use mid elevation
     
     Te.dat[ind.k,spec.k,6,]<-TPC.gausgomp(ts, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax)
     } #check for clavatus
     
     #Survival  
-    Te.dat[ind.k,spec.k,5,]<- surv( ts, CTmin= -20, CTmax=spec.dat[spec.k,"CTmax"])  #HEAT STRESS ONLY spec.dat[spec.k,"CTmin"]
+    Te.dat[ind.k,spec.k,5,]<- surv( ts, CTmin= spec.dat[spec.k,"CTmin"], CTmax=spec.dat[spec.k,"CTmax"])  #HEAT STRESS ONLY spec.dat[spec.k,"CTmin"] -20
     
   } #end loops time points
     
@@ -268,7 +267,11 @@ colnames(f.long)[4]<-"species"
 f.long$component= factor(f.long$component, levels=c("fecundity","fecundity tpc","survival","fitness", "fitness tpc") )
 
 #PLOT
-fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=species))+geom_line()+facet_wrap(~component, ncol=1, scales="free_y")+
+#selections
+f.long= f.long[f.long$species %in% c("pell", "dodg", "sang"),]
+f.long= f.long[f.long$component %in% c("fecundity tpc","survival","fitness tpc"),]
+
+fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=component))+geom_line()+facet_wrap(~species, ncol=1, scales="free_y")+
   theme_bw()+theme(legend.position="bottom") +ylab("fitness component")+xlab("elevation (m)")
 #+scale_color_manual(breaks = c("1752m", "2195m", "2591m","3048m"),
 #                     values=c("darkorange3", "darkorange", "cornflowerblue","blue3"))
@@ -291,8 +294,116 @@ dev.off()
 #dat$AT_clav[which(dat$Te_clav >= spec.dat[wrow, "CTmin"] & dat$Te_clav <= spec.dat[wrow, "CTmax"])]=1
 #dat$AT_clav[which(dat$Te_clav >= spec.dat[wrow, "Tb20"] & dat$Te_clav <= spec.dat[wrow, "Tb80"])]=1
 
+#=====================================
+#BOULDERENSIS
+#Make new boulderensis TPC, 3048m?
+
+setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/HopperTPCdata/")
+hop= read.csv("HoppingData.csv")
+jump.long=hop
 
 
 
+specs1= c("boulderensis","pellucida","sanguinipes")
+elevs1=c(2195,2591,3048)
+sp.k=2
+elev.k=2
+temps=0:60
+
+#estimate TPC
+tpc= tpc.dat[which(tpc.dat$species==specs1[sp.k] & tpc.dat$elev_m==elevs1[elev.k]),]
+perf= 
+
+par(mfrow=c(1,1), cex=1.2, lwd=2, mar=c(1, 2.5, 2.5, 0.2), mgp=c(1.5, 0.5, 0), oma=c(2,2,2,0), bty="l")
+TPC.plot= 
+  
+
+    
+    if(elev.k==1) plot(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="red", ylim=range(0,0.6),xlim=range(0,60), ylab="Hopping distance (cm)", main=specs1[sp.k] )
+    if(elev.k==2) points(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="green")
+    if(elev.k==3) points(temps, TPC.gausgomp(temps, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="blue")
+    
+  } #end sites
+  
+  #add CTmin and CTmax  
+  points(c(spec.dat[sp.k,"CTmin"],spec.dat[sp.k,"PBT"],spec.dat[sp.k,"CTmax"]  ), c(0,0,0))
+  
+} #end species
+
+
+#*********************************
+#ANALYSIS OF THE TEMPERATURE DEPENDENCE OF PERFORMANCE AND FEEDING RATES
+
+#$$$$$$ THERMOREG TOGLE
+TR=TRUE
+#$$$$$$$$
+
+library(car)
+library(nls2) #for TPC fitting
+library(minpack.lm)
+
+count=function(x) length(x)
+
+#HOPPING
+sites= c("Redfox", "A1", "B1", "C1", "D1")  
+elevs= c(1574, 2195, 2591, 3048, 3739)
+
+#read in data
+setwd("F:\\Work\\HopperTPC\\Data\\DataClean\\")
+jump.long= read.csv("HoppingData.csv")
+
+specs=c("M. dodgei", "C. pellucida", "M. sanguinipes", "A. clavatus")
+
+#Prefered body temps
+Tps= c(32.83, 38.22, 30.63, NA)
+
+#--------------------------
+#CONVERT FROM FT TO M
+jump.long$dist =jump.long$dist*0.3048
+
+#aggregate long data
+dat.pop= aggregate(jump.long, by=list(jump.long$Site, jump.long$Species, jump.long$temp), FUN=mean, na.action = na.omit)  #jump.long$Sex
+dat.pop.sd= aggregate(jump.long, by=list(jump.long$Site, jump.long$Species, jump.long$temp), FUN=sd, na.rm = TRUE)
+dat.pop.count= aggregate(jump.long, by=list(jump.long$Site, jump.long$Species, jump.long$temp), FUN=count)
+names(dat.pop)[1:3]= c("Site","Species","temp")
+dat.pop.se= dat.pop.count
+dat.pop.se[,9:12]= dat.pop.sd[,9:12]/sqrt(dat.pop.count[,9:12])
+names(dat.pop.se)[1:3]= c("Site","Species","temp")
+
+#FIGURE 2
+elev_lab= paste(elevs, "m", sep="")
+specs= c("dodgei", "pellucida", "sanguinipes", "clavatus")
+specs_lab=c("M. boulderensis \ncool adapted", "C. pellucida \nwarm adapted", "M. sanguinipes \ngeneralist", "A. clavatus")
+par(mfrow=c(1,3), cex=1.4, lwd=2, mar=c(1, 1, 1.6, 0.7), mgp=c(1.5, 0.5, 0), oma=c(2,2,0,0), bty="l")
+
+cols=c("darkgreen", "limegreen", "turquoise", "dodgerblue", "darkblue")
+#colfunc <- colorRampPalette(c("green", "blue"))
+#cols=colfunc(5)
+pch.match=c("f","m")
+pchs=c(1,19) 
+#pch=pchs[match(dat.spec1$Sex, pch.match)]
+
+for(i in 1:3){
+  dat.spec=subset(dat.pop, dat.pop$Species==specs[i])
+  dat.spec.se=subset(dat.pop.se, dat.pop.se$Species==specs[i])
+  
+  for(site in 1:5){
+    dat.spec1=subset(dat.spec, dat.spec$Site==sites[site])
+    dat.spec1.se=subset(dat.spec.se, dat.spec.se$Site==sites[site])
+    
+    if(site==1){
+      plot(dat.spec1$temp, dat.spec1$dist, col=cols[site], xlim=range(10,35), ylim=range(0.13,0.63), xlab="", ylab="", pch=1, main="", type="b") 
+      title(specs_lab[i], line=-0.9)
+    }
+    if(site>1) points(dat.spec1$temp, dat.spec1$dist, col=cols[site], type="b", pch=1)
+    
+    arrows(dat.spec1$temp, dat.spec1$dist-dat.spec1.se$dist, dat.spec1$temp, dat.spec1$dist+dat.spec1.se$dist, code=3, angle=90,length=0.1, col=cols[site])
+  } #end loop sites
+  
+  if(i==1) legend("bottomright", elev_lab, pch=1, col=cols,ncol=2, bty="n")
+}
+
+mtext("Distance (m)", side = 2, line = 0.5, outer = TRUE, cex=1.5)
+mtext("Temperature (?C)", side = 1, line = 0.5, outer = TRUE, cex=1.5)
 
 
