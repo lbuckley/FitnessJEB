@@ -4,6 +4,9 @@ library(maptools)
 library(reshape2)
 library(ggplot2)
 library(MCMCglmm) #for rtnorm function
+library(viridis)
+library(cowplot)
+library(plotrix) #for se
 
 count=function(x){length(na.omit(x))}
 
@@ -23,6 +26,8 @@ tpc.dat= read.csv("JumpTPCparams.csv")
 #hopping data
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/HopperTPCdata/")
 jump.long= read.csv("HoppingData.csv")
+#CONVERT FROM FT TO M
+jump.long$dist =jump.long$dist*0.3048
 
 specs=c("M. dodgei", "C. pellucida", "M. sanguinipes", "A. clavatus")
 
@@ -70,12 +75,10 @@ source("ZenithAngleFunction.R")
 #Survival
 
 #Functions
-
-#Need sensitivity analysis
 surv<- function(T, CTmin, CTmax, td=4.34){ 
   #10 to 90% of CT range
-  CTmin1= CTmin+(CTmax-CTmin)*0.1
-  CTmax1= CTmin+(CTmax-CTmin)*0.9
+  CTmin1= CTmin+(CTmax-CTmin)*0.2#*0.1
+  CTmax1= CTmin+(CTmax-CTmin)*0.8#*0.9
   
   s1= ifelse(T<CTmax1, s<-1, s<- exp(-(T-CTmax1)/td) )
   s2= ifelse(T>CTmin1, s<-1, s<- exp(-(CTmin1-T)/td) )
@@ -83,6 +86,7 @@ surv<- function(T, CTmin, CTmax, td=4.34){
   return( s*0.8 )
 }
 plot(0:70, surv(0:70, 10, 60), type="l")
+points(c(10,60),c(0.8,0.8))
 
 #Model thermoregulation toward Topt
 thermoreg.mat<- function(t.mat, Topt){
@@ -108,33 +112,49 @@ tpc.perf= function(T,Topt,CTmin, CTmax){
   return(F)
 }
 
-
 TPC.gausgomp= function(T, To, rho=0.9, sigma, Fmax) Fmax*exp(-exp(rho*(T-To)-6)-sigma*(T-To)^2) # rho and sigma determine, the thermal sensitivity of feeding at temperatures above and below Topt, respectively
 
 #empirical TPC
-#CONVERT FROM FT TO M
-jump.long$dist =jump.long$dist*0.3048
+
 #aggregate data
-dat.pop= aggregate(jump.long, by=list(jump.long$Site, jump.long$Species, jump.long$temp), FUN=mean, na.action = na.omit)  #jump.long$Sex
-names(dat.pop)[1:3]= c("Site","Species","temp")
-dat.pop1= subset(dat.pop, dat.pop$Species=="dodgei" & dat.pop$elev==3048)
+jump.long= subset(jump.long, jump.long$Species=="dodgei" & jump.long$elev==3048)
+jump.long= jump.long[,c("dist","temp")]
+
+dat.pop= aggregate(jump.long, by=list(jump.long$temp), FUN=mean, na.action = na.omit)  #jump.long$Sex
+
+dat.pop.se= aggregate(jump.long, by=list(jump.long$temp), FUN=std.error) 
+dat.pop$se= dat.pop.se$dist
+
+dat.pop=dat.pop[,2:4]
 
 #add CTs to tpc data
-dat.tpc= as.data.frame( cbind( c(dat.pop1[,"temp"],7.78,57.16), c(dat.pop1[,"dist"],0,0) ))
-colnames(dat.tpc)=c("temp","dist")
+dat.tpc= as.data.frame( cbind( c(dat.pop[,"temp"],7.78,57.16), c(dat.pop[,"dist"],0,0),c(dat.pop[,"se"],NA,NA) ))
+colnames(dat.tpc)=c("temp","dist","se")
 
+#fit loess
 lo= loess(dist ~ temp, dat.tpc, span=1)
 
 #---------------
 #fitness component plot
 
-par(mfrow=c(1,1))
-plot(0:70, surv(0:70, 10, 60), type="l")
+surviv= as.data.frame(cbind(0:70, surv(0:70, 7.78, 57.16)))
+surviv$component="survival"
+#fec= as.data.frame(cbind(0:70, predict(lo,0:70)))
+#fec$component="performance"
 
-#tpc
-points(0:70, predict(lo,0:70), type="l", col="green")
-points(dat.tpc$temp, dat.tpc$dist)
+#use Rezendes 2019 curve fit using rTPC package in HopperFitness_TPCfit
+fec.rez= as.data.frame(cbind(0:70, rezende_2019(0:70, q10=2.27, a=0.109, b=9.02, c=0.00116) ))
+#set negative values to zero
+fec.rez[which(fec.rez[,2]<0),2]<-0
+fec.rez$component="performance"
+fit.c= rbind(surviv, fec.rez)
 
+comp.plot= ggplot(data=fit.c)+geom_line(size=2, aes(x=V1, y = V2, color=component))+
+  theme(legend.position="bottom") +ylab("fitness component")+xlab("temperature (°C)")+
+  theme_bw(base_size = 16)+ theme(legend.position="bottom")+ scale_color_manual(values=viridis(3)[1:2], name="")+
+ geom_point(data = dat.tpc, mapping = aes(x = temp, y = dist, size=3), show.legend=FALSE)+ 
+  geom_errorbar(data = dat.tpc, mapping = aes(x = temp, ymin = dist-se, ymax = dist+se, width=0.2), show.legend=FALSE)
+    
 #================
 #Estimate fecundity components
 
@@ -197,7 +217,10 @@ spec.k=1
     # 
     # Te.dat[ind.k,spec.k,6,]<-TPC.gausgomp(ts, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax)
     #} #check for clavatus
-    Te.dat[ind.k,spec.k,6,]<-predict(lo,ts)
+    #Te.dat[ind.k,spec.k,6,]<-predict(lo,ts)
+    perf= rezende_2019(ts, q10=2.27, a=0.109, b=9.02, c=0.00116)
+    perf[which(perf<0)]=0
+    Te.dat[ind.k,spec.k,6,]<-perf
     
     #Survival  
     Te.dat[ind.k,spec.k,5,]<- surv( ts, CTmin= spec.dat[spec.k,"CTmin"], CTmax=spec.dat[spec.k,"CTmax"])  #HEAT STRESS ONLY spec.dat[spec.k,"CTmin"] -20
@@ -213,15 +236,11 @@ for(site.k in 1:length(site.list) ){
   
   site.inds= which(dat$site==site.list[site.k])
   
-  for(spec.k in 1:length(specs) ){
-
     #estimate fitness as (sum of fecundity)(product of survival)
      fit[site.k, spec.k,1,]= colSums(Te.dat[site.inds,spec.k,4,], na.rm=TRUE) #fecund
      fit[site.k, spec.k,2,]= colSums(Te.dat[site.inds,spec.k,6,], na.rm=TRUE) #fecund tpc
      
       fit[site.k, spec.k,3,]= colMeans(Te.dat[site.inds,spec.k,5,], na.rm=TRUE) #surv
-
-} #end species loop
 } #end site loop
 
 #scale fecundity to max
@@ -255,19 +274,26 @@ f.dat$elev= elevs
 f.long= melt(data = f.dat, id.vars = c("site","elev"), measure.vars = c("fecundity","fecundity tpc","survival","fitness", "fitness tpc"))
 #order fitness factors
 f.long$component<- f.long$variable
-f.long$component= factor(f.long$component, levels=c("fecundity","fecundity tpc","survival","fitness", "fitness tpc") )
 
 #PLOT
 #selections
-f.long= f.long[f.long$component %in% c("fecundity tpc","survival","fitness tpc"),]
+f.long= f.long[f.long$variable %in% c("fecundity tpc","survival","fitness tpc"),]
+#change labels
+f.long$component<-NA
+f.long$component[f.long$variable=="fecundity tpc"]<-"fecundity"
+f.long$component[f.long$variable=="survival"]<-"survival"
+f.long$component[f.long$variable=="fitness tpc"]<-"fitness= fecundity * survival"
+f.long$component= factor(f.long$component, levels=c("fecundity","survival","fitness= fecundity * survival") )
 
-fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=component))+geom_line()+
-  theme_bw()+theme(legend.position="bottom") +ylab("fitness component")+xlab("elevation (m)")
-#+scale_color_manual(breaks = c("1752m", "2195m", "2591m","3048m"),
-#                     values=c("darkorange3", "darkorange", "cornflowerblue","blue3"))
+fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=component))+geom_line(size=2)+geom_point(size=4)+
+ theme(legend.position="bottom") +ylab("fitness component")+xlab("elevation (m)")+
+theme_bw(base_size = 16)+ theme(legend.position="bottom")+ scale_color_viridis(discrete=TRUE, name="") 
 
 #FIGURE
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/")
 pdf("FitnessFig.pdf", height = 10, width = 6)
+
+plot_grid(comp.plot, fit.plot, labels = "AUTO", rel_widths = c(1.8, 2))
+
 fit.plot
 dev.off()
