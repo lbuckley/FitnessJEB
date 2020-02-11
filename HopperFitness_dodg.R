@@ -282,8 +282,8 @@ f.long= f.long[f.long$variable %in% c("fecundity tpc","survival","fitness tpc"),
 f.long$component<-NA
 f.long$component[f.long$variable=="fecundity tpc"]<-"fecundity"
 f.long$component[f.long$variable=="survival"]<-"survival"
-f.long$component[f.long$variable=="fitness tpc"]<-"fitness= fecundity * survival"
-f.long$component= factor(f.long$component, levels=c("fecundity","survival","fitness= fecundity * survival") )
+f.long$component[f.long$variable=="fitness tpc"]<-"fitness"
+f.long$component= factor(f.long$component, levels=c("fecundity","survival","fitness") )
 
 fit.plot= ggplot(data=f.long, aes(x=elev, y = value, color=component))+geom_line(size=2)+geom_point(size=4)+
  theme(legend.position="bottom") +ylab("fitness component")+xlab("elevation (m)")+
@@ -291,9 +291,8 @@ theme_bw(base_size = 16)+ theme(legend.position="bottom")+ scale_color_viridis(d
 
 #FIGURE
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/")
-pdf("FitnessFig.pdf", height = 10, width = 6)
+pdf("FitnessFig.pdf", height = 6, width = 8)
 
 plot_grid(comp.plot, fit.plot, labels = "AUTO", rel_widths = c(1.8, 2))
 
-fit.plot
 dev.off()
