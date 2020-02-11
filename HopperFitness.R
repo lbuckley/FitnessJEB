@@ -304,6 +304,9 @@ jump.long=hop
 
 
 
+
+#-----
+
 specs1= c("boulderensis","pellucida","sanguinipes")
 elevs1=c(2195,2591,3048)
 sp.k=2
@@ -357,7 +360,7 @@ specs=c("M. dodgei", "C. pellucida", "M. sanguinipes", "A. clavatus")
 #Prefered body temps
 Tps= c(32.83, 38.22, 30.63, NA)
 
-#--------------------------
+#=============
 #CONVERT FROM FT TO M
 jump.long$dist =jump.long$dist*0.3048
 
@@ -406,4 +409,42 @@ for(i in 1:3){
 mtext("Distance (m)", side = 2, line = 0.5, outer = TRUE, cex=1.5)
 mtext("Temperature (?C)", side = 1, line = 0.5, outer = TRUE, cex=1.5)
 
+#-----------------------
+#read in data
+setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/HopperTPCdata/")
+jump.long= read.csv("HoppingData.csv")
 
+specs=c("M. dodgei", "C. pellucida", "M. sanguinipes", "A. clavatus")
+
+#Prefered body temps
+Tps= c(32.83, 38.22, 30.63, NA)
+
+#=============
+#CONVERT FROM FT TO M
+jump.long$dist =jump.long$dist*0.3048
+
+dat.pop= aggregate(jump.long, by=list(jump.long$Site, jump.long$Species, jump.long$temp), FUN=mean, na.action = na.omit)  #jump.long$Sex
+names(dat.pop)[1:3]= c("Site","Species","temp")
+dat.pop1= subset(dat.pop, dat.pop$Species=="dodgei" & dat.pop$elev==3048)
+
+tpc= tpc.dat[which(tpc.dat$species=="boulderensis" & tpc.dat$elev_m==3048),]
+plot(-10:60, TPC.gausgomp(-10:60, To=tpc$To, rho=0.7, sigma=tpc$sigma, Fmax=tpc$Pmax), type="l", col="red", ylim=range(0,0.6),ylab="Hopping distance (cm)")
+
+#tpc
+points(dat.pop1$temp, dat.pop1$dist)
+
+#add thermal sensitivity
+points(Tps[1], 0.6, pch="*")
+points(spec.dat[spec.dat$SpecID=="dodg",c("CTmin","CTmax")], c(0,0) )
+
+#spl= spline(dat.tpc$temp, dat.tpc$dist)
+#points(spl$x, spl$y, type="l", col="green")
+
+lo= loess(dist ~ temp, dat.tpc, span=1)
+points(-10:60, predict(lo,-10:60), type="l", col="purple")
+
+#---
+dat.tpc= as.data.frame( cbind( c(dat.pop1[,"temp"],7.78,57.16), c(dat.pop1[,"dist"],0,0) ))
+colnames(dat.tpc)=c("temp","dist")
+
+ggplot(data=dat.tpc, aes(x=temp, y = dist))+geom_point()+geom_line()+geom_smooth()
