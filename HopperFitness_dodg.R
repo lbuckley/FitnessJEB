@@ -7,6 +7,7 @@ library(MCMCglmm) #for rtnorm function
 library(viridis)
 library(cowplot)
 library(plotrix) #for se
+library(rTPC)
 
 count=function(x){length(na.omit(x))}
 
@@ -16,7 +17,7 @@ count=function(x){length(na.omit(x))}
 
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/")
 spec.dat=read.csv("SpecData.csv")
-#site.list= c("Eldorado","A1","B1","C1")
+site.list= c("Eldorado","A1","B1","C1")
 #specs= c("clav","pell","dodg","sang")
 #spec.dat=spec.dat[match(spec.dat$SpecID, specs),]
 
@@ -76,7 +77,7 @@ source("ZenithAngleFunction.R")
 
 #Functions
 surv<- function(T, CTmin, CTmax, td=4.34){ 
-  #10 to 90% of CT range
+  #20 to 80% of CT range
   CTmin1= CTmin+(CTmax-CTmin)*0.2#*0.1
   CTmax1= CTmin+(CTmax-CTmin)*0.8#*0.9
   

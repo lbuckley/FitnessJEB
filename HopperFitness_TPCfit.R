@@ -1,5 +1,7 @@
 #Fit TPCs to dodgei hopping data
 
+library(rTPC)
+
 #hopping data
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/HopperTPCdata/")
 jump.long= read.csv("HoppingData.csv")
