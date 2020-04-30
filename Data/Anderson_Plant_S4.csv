@@ -1,0 +1,96 @@
+study,publication_year,species,genus,life_form,Strategy,m1i,sd1i,n1i,m2i,sd2i,n2i,fitness,level,treat,treatment,year,location,absolute_latitude,elevation(m),climate ,habitat,source
+Aerts,2004,Andromeda_polifolia,Andromeda,forb,perennial,105.8929042,59.66190344,5,102.3516223,64.92618903,5,flowers,plot,passive_warming,passive_warming,2001,Sweden,68.35,400,subarctic,shrubland,Fig5
+Aerts,2004,Rubus_chamaemorus,Rubus,shrub,perennial,185.5294901,103.0235629,5,268.0254,101.2223324,5,flowers,plot,passive_warming,passive_warming,2001,Sweden,68.35,400,subarctic,shrubland,Fig5
+Alatalo,1997,Silene_acaulis,Silene,forb,perennial,6.556071429,4.00765265,14,5.8435,1.696103079,14,seeds,individual,passive_warming,passive_warming,1993,Sweden,64.48333335,1220,NA ,NA,Table3
+Bokhorst,2008,Vaccinium_myrtillus,Vaccinium,shrub,perennial,0.042918035,0.053190077,12,0.40136377,0.295876434,6,fruits,individual,active_warming,active_warming,2007,Sweden,68.35,400,subarctic,shrubland,Fig5
+Bokhorst,2008,Empetrum_hermaphroditum,Empetrum,shrub,perennial,0.131581118,0.235913839,12,0.214832415,0.433474883,6,fruits,individual,active_warming,active_warming,2007,Sweden,68.35,400,subarctic,shrubland,Fig5
+Bokhorst,2008,Vaccinium_vitis-idaea,Vaccinium,shrub,perennial,0.26386319,0.416632158,12,0.646265095,0.516054153,6,fruits,individual,active_warming,active_warming,2007,Sweden,68.35,400,subarctic,shrubland,Fig5
+Bret-Harte,2001,Betula_nana,Betula,shrub,perennial,1.26166734,2.295409606,4,0.577041652,0.587672485,4,flowers,individual,passive_warming,passive_warming,1988,Alaska,68.633333,760,arctic,tundra,Fig4
+Bret-Harte,2001,Rhododendron_tomentosum,Ledum,shrub,perennial,1.055003933,0.474560415,4,1.227648672,1.268896307,4,flowers,individual,passive_warming,passive_warming,1988,Alaska,68.633333,760,arctic,tundra,Fig4
+Campbell,2013,Ipomopsis_aggregata,Ipomopsis,forb,perennial,127.0028712,79.89907132,8,138.8672779,128.6350235,10,flowers,individual,drought,drought,2009,USA,38.95,2900,subalpine,meadow,Fig4
+De Frenne,2011,Anemone_nemorosa,Anemone,forb,perennial,14.2358804,6.618220384,16,19.36877076,10.91466037,16,seeds,individual,passive_warming,passive_warming,2009,Belgium,50.9,NA,temperate,forest,Fig3e
+De Valpine,2001,Helianthella_quinquenervis,Helianthella,forb,perennial,0.138705674,0.117373746,5,0.091338652,0.106233052,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Erigeron_speciosus,Erigeron,forb,perennial,0.607978723,0.067082039,5,0.318111702,0.067082039,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Potentilla_hippiana,Potentilla,forb,perennial,0.549751773,0.128573909,5,0.449884752,0.128554085,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Eriogonum_subalpinum,Eriogonum,forb,perennial,0.109462916,0.180715468,5,0.270076726,0.178427931,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Galium_boreale,Galium,forb,perennial,21.82825745,19.42822629,5,19.8130885,18.52407501,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Delphinium_nelsonii,Delphinium,forb,perennial,10.40787095,2.852119486,5,7.199380093,2.705103017,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+De Valpine,2001,Mertensia_fusiformis,Mertensia,forb,perennial,72.35541362,27.78611252,5,110.5252777,30.56472377,5,flowers,plot,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig1
+del Cacho,2013,Erica_multiflora,Erica,shrub,perennial,1.200827365,5.845228296,23,2.85701529,7.219867777,29,seeds,individual,drought,drought,2008,Spain,41.3,210,Mediterranean,shrubland,Fig1
+del Cacho,2013,Dorycnium_pentaphyllum,Dorycnium,forb,perennial,0.435747814,1.869651506,50,0.532719742,2.06035927,58,fruits,individual,drought,drought,2008,Spain,41.3,210,Mediterranean,shrubland,Fig1
+del Cacho,2013,Helianthemum_syriacum,Helianthemum ,shrub,perennial,3.456109606,4.733610209,20,4.168711168,5.020733165,20,seeds,individual,drought,drought,2008,Spain,41.3,210,Mediterranean,shrubland,Fig1
+Diaz,1998,Galium_aparine,Galium,forb,annual,35.91160221,25.71287575,6,49.17127072,29.7728035,6,seeds,plot,CO2,CO2,NA,UK,NA,NA,temperate,grassland,Fig1
+Diaz,1998,Poa_annua,Poa,graminoid,annual,19.55261752,8.832294746,6,16.96581197,29.04516483,6,flowers,plot,CO2,CO2,NA,UK,NA,NA,temperate,grassland,Fig1
+Dorji,2013,Kobresia_pygmaea,Kobresia,graminoid,perennial,44.31818182,4.821182599,8,69.88636364,3.214121733,8,flowers,plot,passive_warming,passive_warming,2010,Tibet,30.6868,4900,alpine,meadow,Fig5c
+Dunnett,1999,Dactylis_glomerata,Dactylis,graminoid,perennial,1.067055276,0.827094464,5,2.277032269,0.975889051,5,seeds,individual,heating_cables,active_warming,1992,UK,51.758,135,temperate,grassland,Fig3
+Fischer,1997,Gentianella_germanica,Gentianella,forb,biennial,12,9,4,59.03333333,39.62,4,seeds,individual,CO2,CO2,1993,Switzerland,47.45,NA,montane,grassland,Table4
+Fox,1999,Hypericum_perforatum,Hypericum,forb,perennial,3.4,1.2,9,4.8,2.1,9,seeds,individual,drought,drought,1995,UK,51.778,64,temperate,grassland,Table2
+Gerdol,2013,Vaccinium_myrtillus,Vaccinium,shrub,perennial,3.355770393,4.244368517,60,10.93438066,15.06906445,60,flowers,individual,drought,drought,2004,Italy,44.13333,1741,subalpine,heath,Fig2
+Hobbie,1999,Carex_bigelowii,Carex,graminoid,perennial,62.57824236,145.6438402,7,80.29544316,92.90601437,7,seeds,plot,passive_warming,passive_warming,1990,Alaska,68.633333,760,arctic,tundra,Fig7
+Hobbie,1999,Rhododendron_tomentosum,Ledum,shrub,perennial,71.31844763,81.58084851,7,99.0430622,66.46026021,7,seeds,plot,passive_warming,passive_warming,1990,Alaska,68.633333,760,arctic,tundra,Fig7
+Hobbie,1999,Vaccinium_vitis-idaea,Vaccinium,shrub,perennial,30.28481013,1.758252454,7,43.21202532,2.386199758,7,fruits,plot,passive_warming,passive_warming,1990,Alaska,68.633333,760,arctic,tundra,Fig7
+Hovenden,2008,Austrodanthonia_caespitosa,Austrodanthonia,graminoid,perennial,55.66452094,23.96959938,3,32.06902304,75.64363141,3,seeds,individual,CO2_+_warming,CO2_+_warming,2004,Australia,42.7,40,temperate,grassland,Fig1
+Klanderud and Totland,2005,Thalictrum_alpinumm,Thalictrum,forb,annual,3.090565389,1.541320229,2,3.407458326,1.151494047,2,seeds,individual,passive_warming,passive_warming,2000,Norway,60.1166667,1500,alpine,meadow,Fig3c
+Kudo,2003,Rhododendron_tomentosum,Ledum,shrub,perennial,0.930930931,1.029815507,6,0.960960961,0.882699006,6,flowers,individual,passive_warming,passive_warming,1994,Japan,43.55,1680,montane,fellfield,Fig2
+Kudo,2003,Empetrum_nigrum,Empetrum,shrub,perennial,5.825825826,6.326009546,6,6.426426426,3.604354276,6,flowers,individual,passive_warming,passive_warming,1994,Japan,43.55,1680,montane,fellfield,Fig2
+Kudo,2003,Vaccinium_vitis-idaea,Vaccinium,shrub,perennial,0.33033033,0.537193508,5,0.21021021,0.47004432,5,flowers,individual,passive_warming,passive_warming,1994,Japan,43.55,1680,montane,fellfield,Fig2
+Kudo,2003,Vaccinium_uliginosum,Vaccinium,shrub,perennial,5.045045045,2.133189265,6,1.771771772,0.809140756,6,flowers,individual,passive_warming,passive_warming,1994,Japan,43.55,1680,montane,fellfield,Fig2
+Kudo,2003,Arctous_alpinus,Arctous,shrub,perennial,2.132132132,1.501501502,4,0.24024024,0.36036036,4,flowers,individual,passive_warming,passive_warming,1994,Japan,43.55,1680,montane,fellfield,Fig2
+Liancourt,2012,Festuca_lenensis,Festuca ,graminoid,perennial,19.12855059,4.754792987,15,43.9317442,29.68521761,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Poa_attenuata,Poa ,graminoid,perennial,82.65852142,96.8724203,15,45.0859435,61.81987357,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Carex_spp.,Carex,graminoid,perennial,3.704464657,2.945376642,15,5.274727633,4.075640808,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Koeleria_macrantha,Koeleria,graminoid,perennial,3.951489008,4.887586325,15,7.587869096,7.888518862,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Potentilla_sericea,Potentilla,forb,perennial,2.201812584,3.912592058,15,3.028300603,5.747682556,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Artemisia_commutata,Artemisia,forb,perennial,1.815677613,1.027907259,15,1.867779211,1.018832979,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Dontostemon_integrifolius,Dontostemon,forb,annual,26.31569747,10.96065687,7,20.97054635,7.788622638,7,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Liancourt,2012,Thymus_gobicus,Thymus,forb,perennial,11.75746795,13.29181458,15,14.18731267,14.13749154,15,flowers,individual,passive_warming,passive_warming,2009,China,51.0166667,1735,montane,mountain steppe,Fig2
+Llorens,2005,Erica_multiflora,Erica ,shrub,perennial,172.7272727,146.6175099,19,250.9090909,161.3143331,23,flowers,individual,drought,drought,1999,Spain,41.4666667,210,Mediterranean,shrubland,Fig5
+Llorens,2005,Globularia_alypum,Globularia,shrub,perennial,1.6,2.915475947,34,2.3,6.997142274,34,flowers,individual,drought,drought,2000,Spain,41.4666667,210,Mediterranean,shrubland,text
+Matesanz,2009,Centaurea_hyssopifolia,Centaurea,forb,perennial,261.5,395.8810171,60,414.75,479.8720036,60,seeds,individual,drought,drought,2005,Spain,40.05,754,Mediterranean,meadow,AppendixD
+Nylehn and Totland,1999,Euphrasia_frigida,Euphrasia,forb,annual,23.7,9.803060747,10,12.7,5.059644256,10,seeds,individual,passive_warming,passive_warming,1995,Norway,60.6166667,1429,alpine,meadow,Table1
+Penuelas ,2004,Arbutus_unedo,Arbutus,tree,perennial,0.184079602,0.407960199,4,0.611940299,0.776119403,4,fruits,individual,drought,drought,2000,Spain,41.2166667,930,Mediterranean,forest,Fig2a
+Penuelas ,2004,Phillyrea_latifolia,Phillyrea,tree,perennial,0.211777631,0.073566249,4,0.191474401,0.103361898,4,fruits,individual,drought,drought,2000,Spain,41.2166667,930,Mediterranean,forest,Fig2a
+Penuelas ,2004,Globularia_alypum,Globularia,tree,perennial,37.09677419,31.28865975,3,193.2258065,113.9801177,3,recruitment,plot,drought,drought,2001,Spain,41.3,210,Mediterranean,shrubland,Fig2b
+Penuelas ,2004,Erica_multiflora,Erica,tree,perennial,33.33333333,39.97040325,3,348.7179487,355.2924733,3,recruitment,plot,drought,drought,2001,Spain,41.3,210,Mediterranean,shrubland,Fig2b
+Pfeifer-Meister,2013,Thysanocarpus_radians,Thysanocarpus,forb,annual,0.00001,0.00001,10,0.007733027,0.009144607,10,seeds,individual,active_warming,active_warming,2011,USA,42.2780556,394,temperate,grassland,AppendixF
+Pfeifer-Meister,2013,Achyrachaena_mollis,Achyrachaena,forb,annual,0.014141173,0.017815727,10,0.061838954,0.060169408,10,seeds,individual,active_warming,active_warming,2011,USA,42.2780556,394,temperate,grassland,AppendixF
+Pfeifer-Meister,2013,Navarretia_pubescens,Navarretia,forb,annual,0.001828672,0.005152637,10,0.041352794,0.034597129,10,seeds,individual,active_warming,active_warming,2011,USA,42.2780556,394,temperate,grassland,AppendixF
+Pfeifer-Meister,2013,Aristida_oligantha,Aristida,graminoid,annual,0.016248872,0.027569221,20,0.019605443,0.039581168,20,seeds,individual,active_warming,active_warming,2011,USA,43.15208335,279.5,temperate,grassland,AppendixF
+Pfeifer-Meister,2013,Clarkia_purpurea,Clarkia,forb,annual,0.44622642,0.854121059,30,0.526330595,1.015360031,30,seeds,individual,active_warming,active_warming,2011,USA,44.4001852,231,temperate,grassland,AppendixF
+Pfeifer-Meister,2013,Collinsia_grandiflora,Collinsia,forb,annual,0.01252674,0.022627662,30,0.040313266,0.054672984,30,seeds,individual,active_warming,active_warming,2011,USA,44.4001852,231,temperate,grassland,AppendixF
+Pratt and Mooney,2013,Artemisia_californica,Artemisia,shrub,perennial,190775.7723,171228.6431,3,425828.7053,155109.0275,3,flowers,plot,drought,drought,2009,USA,33.65,16,Mediterranean,shrubland,Fig2c
+Rodriguez-Calcerrada,2013,Buxus_sempervirens,Buxus,tree,perennial,0.32,0.641560597,21,0.76,1.328946952,21,fruits,individual,drought,drought,2003,France,43.7413889,270,Mediterranean,forest,Table3
+Saavedra,2003,Delphinium_nuttallianum,Delphinium,forb,perennial,4.634615385,0.190100078,5,5.181490385,0.180901688,5,flowers,individual,active_warming,active_warming,1994,USA,38.95,2900,subalpine,meadow,Fig3
+Stenstrom,2006,Carex_bigelowii,Carex,graminoid,perennial,27.3,8.221921916,10,20,6.008327554,10,seeds,plot,passive_warming,passive_warming,1998,Sweden,68.36,1000,subarctic,shrubland,Table4
+Thurig,2003,Anthoxanthum_odoratum,Anthoxanthum,graminoid,perennial,74,67.88225099,8,46,48.08326112,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Briza_media,Briza,graminoid,perennial,194,288.4995667,8,206,345.0681092,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Bromus_erectus,Bromus ,graminoid,perennial,3730,2019.496967,8,2900,735.3910524,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Carex_caryophyllea,Carex,graminoid,perennial,908,780.6458864,8,560,576.9991334,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Carex_flacca,Carex,graminoid,perennial,209,257.3868684,8,19,28.28427125,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Danthonia_decumbens,Dathonia,graminoid,perennial,33,39.59797975,8,37,76.36753237,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Bellis_perennis,Bellis,forb,perennial,25,45.254834,8,4,8.485281374,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Hieracium_pilosella,Hieracium,forb,perennial,40,59.39696962,8,15,28.28427125,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Knautia_arvensis,Knautia,forb,perennial,105,147.0782105,8,50,62.22539674,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Linum_catharticum,Linum ,forb,annual,2547,2259.913273,8,2124,2534.270704,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Prunella_vulgaris,Prunella,forb,perennial,105,158.391919,8,69,82.02438662,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Salvia_pratensis,Salvia,forb,perennial,99,189.5046174,8,237,407.293506,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Sanguisorba_minor,Sanguisorba,forb,perennial,351,316.783838,8,402,251.7300141,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Ranunculus_bulbosus,Ranunculus,forb,perennial,9,11.3137085,8,18,16.97056275,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Lotus_corniculatus,Lotus,forb,perennial,42,59.39696962,8,12,16.97056275,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Medicago_lupulina,Medicago,forb,perennial,492,427.0924958,8,1109,1547.149637,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Trifolium_medium,Trifolium,forb,perennial,2,2.828427125,8,27,50.91168825,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Trifolium_montanum,Trifolium,forb,perennial,214,308.2985566,8,60,82.02438662,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Thurig,2003,Trifolium_pratense,Trifolium,forb,perennial,48,53.74011537,8,8,11.3137085,8,seeds,plot,CO2,CO2,1998,Switzerland,NA,520,temperate,grassland,Table1
+Totland,1999,Ranunculus_acris,Ranunculus,forb,perennial,15.5583599,4.293911255,11,12.38803989,4.235613361,11,seeds,individual,passive_warming,passive_warming,1994,Norway,60.11666,1500,alpine,tundra,Fig3
+Totland,1997,Leontodon_autumnalis_var._taraxaci,Leontodon,forb,perennial,11.7,8.8,19,5.1,6,18,seeds,individual,passive_warming,passive_warming,1994,Norway,60.1166667,1500,alpine,meadow,Table1
+Totland and Alatalo,2002,Ranunculus_glacialis,Ranunculus,forb,perennial,40.7239819,18.93458365,19,57.8280543,29.58528695,19,seeds,individual,passive_warming,passive_warming,1995,Norway,60.6,1450,alpine,tundra,Fig1
+Totland and Nylehn,1998,Bistorta_vivipara,Bistorta,forb,perennial,5.28,4.43,10,3.15,2.29,10,flowers,individual,passive_warming,passive_warming,1994,Norway,60.6,1500,alpine,meadow,Table5
+Way,2010,Pinus_taeda,Pinus,tree,perennial,47.5,15.93486743,3,24.16642299,27.6,36,seeds,plot,CO2,CO2,1999,USA,35.97,163,temperate,forest,Table1
+Wookey,1995,Dryas_octopetala_ssp._octopetala,Dryas,shrub,perennial,995,418.862746,6,1472,541.3372332,6,seeds,plot,passive_warming,passive_warming,1991,Norway,78.9353,22,Arctic,semi-desert,Table2
+Xu,2009,Daphne_retusa,Daphne,shrub,perennial,13.8,4.4,28,15.4,3.7,31,fruits,individual,passive_warming,passive_warming,2007,Tibet,32.983333,3240,subalpine,shrubland,Table3
+Xu,2009,Spiraea_mongolica,Spiraea,shrub,perennial,749,331.2,31,903.2,302.3,35,fruits,individual,passive_warming,passive_warming,2007,Tibet,32.983333,3240,subalpine,shrubland,Table3
+Xu,2009,Potentilla_fruticosa,Potentilla,shrub,perennial,21.8,5.6,33,23.8,4.9,30,fruits,individual,passive_warming,passive_warming,2007,Tibet,32.983333,3240,subalpine,shrubland,Table3
+Xu,2009,Lonicera_hispida,Lonicera,shrub,perennial,10.5,3.4,32,11.6,3,35,fruits,individual,passive_warming,passive_warming,2007,Tibet,32.983333,3240,subalpine,shrubland,Table3
+Klady,2011,Festuca_brachyphylla,Festuca,graminoid,perennial,0.023,0.006,26,0.015,0.004,26,flower,individual,passive_warming,passive_warming,2004,Canada,78.8833333,NA,arctic ,tundra,Table3
+Klady,2011,Dryas_integrifolia,Dryas,shrub,perennial,0.02425,0.009919824,104,0.029,0.009234801,104,flower,individual,passive_warming,passive_warming,2004,Canada,78.8833333,NA,arctic ,tundra,Table3
+Klady,2011,Luzula_spp.,Luzula,graminoid,perennial,0.037333333,0.019868834,78,0.027,0.016424562,78,flower,individual,passive_warming,passive_warming,2004,Canada,78.8833333,NA,arctic ,tundra,Table3

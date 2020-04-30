@@ -1,0 +1,10 @@
+spec,species,elev_m,To,sigma,Pmax
+dodg,boulderensis,2195,29.8,0.0021,0.52
+dodg,boulderensis,2591,29.8,0.002,0.48
+dodg,boulderensis,3048,29.8,0.002,0.6
+pell,pellucida,2195,35.2,0.0048,0.42
+pell,pellucida,2591,35.2,0.0045,0.47
+pell,pellucida,3048,35.2,0.0046,0.37
+sang,sanguinipes,2195,29.2,0.0035,0.6
+sang,sanguinipes,2591,30.6,0.003,0.37
+sang,sanguinipes,3048,30.4,0.0029,0.49
