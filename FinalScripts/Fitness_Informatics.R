@@ -5,7 +5,7 @@ library(Hmisc)
 library(cowplot)
 library(viridis)
 
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/meta_data")
+wd=getwd()
 
 #===============================================
 #Anderson
@@ -14,9 +14,9 @@ setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/meta_d
 #Fecundity data were available at the level of the individual plant (e.g. number of flowers, fruits or seeds per individual) for 55 records (species by study combinations). For the remaining 40 records, fecundity data were presented on a population level, either per unit area (e.g. number of seeds or seed biomass per m2) or per plot (e.g. fecundity per experimental block). 
 
 #some matches between s1 (survival) and s4 (fecundity)
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/meta_data/Anderson_PlantMeta/")
-s1= read.csv("S1.csv")
-s4= read.csv("S4.csv")
+setwd("./Data/")
+s1= read.csv("Anderson_Plant_S1.csv")
+s4= read.csv("Anderson_Plant_S4.csv")
 #restrict to warming treatments
 s1= s1[s1$treatment %in% c("infrared_heater","warming"),] #"snow_removal",
 s4= s4[s4$treatment %in% c("active_warming","passive_warming"),]
@@ -75,7 +75,8 @@ dev.off()
 #===============================================
 #Hargraves
 
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/meta_data/Hargreaves/")
+setwd(wd)
+setwd("./Data/")
 fit= read.csv("Hargreaves_metaperfdata.csv")
 
 #parameter

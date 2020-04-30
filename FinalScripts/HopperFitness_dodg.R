@@ -11,11 +11,13 @@ library(rTPC)
 
 count=function(x){length(na.omit(x))}
 
+wd=getwd()
+
 #Model boulderensis at 3048m
 #--------------------------
 #Read data
 
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/")
+setwd("./Data/Grasshopper/")
 spec.dat=read.csv("SpecData.csv")
 site.list= c("Eldorado","A1","B1","C1")
 #specs= c("clav","pell","dodg","sang")
@@ -25,7 +27,6 @@ site.list= c("Eldorado","A1","B1","C1")
 tpc.dat= read.csv("JumpTPCparams.csv")
 
 #hopping data
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/data/HopperTPCdata/")
 jump.long= read.csv("HoppingData.csv")
 #CONVERT FROM FT TO M
 jump.long$dist =jump.long$dist*0.3048
@@ -37,8 +38,7 @@ Tps= c(32.83, 38.22, 30.63, NA)
 
 #read weather data
 #dates are July 5 to September 14
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/Grasshoppers/data/PaceDatalogging/Weather2011csv/")
-dat=read.csv("DatAll.csv", sep=",", na.strings = c("-49.99","NA"))
+dat=read.csv("Weather2011_DatAll.csv", sep=",", na.strings = c("-49.99","NA"))
 #match site data
 sites=read.csv("SiteElevations.csv", sep=",")
 
@@ -55,7 +55,7 @@ dat$mass_dodg= 1-1.64*10^-4*3048 #*dat$Elev
 dat$L_dodg= exp(3.33*0.247*log(dat$mass_dodg))
 
 #source biophys function
-setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/Grasshoppers/biophys/")
+setwd("./biophys/")
 source("GrassBiophysFunction_20Jan2012.R")
 #biophys=function(Ta, J, Wind, Rad, kt, psi_deg)
 #source dtr function 
