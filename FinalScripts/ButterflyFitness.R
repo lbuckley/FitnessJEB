@@ -10,8 +10,10 @@ aseq= seq(0.4,0.7,0.05)
 proj.k=2 #1: bcc-csm1-1.1.rcp60, 2: ccsm4.1.rcp60, 3: gfdl-cm3.1.rcp60
 projs=c("bcc-csm","ccsm4","gfdl")
 
+setwd(wd)
 setwd("./Data/")
 ldat<-read.csv("ColiasLambdaData.csv")
+ldat$year= as.factor(ldat$year)
 
 #plot
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/")
