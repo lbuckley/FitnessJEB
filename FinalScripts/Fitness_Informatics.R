@@ -44,6 +44,8 @@ s4$fit_d[s4$fit_d>1]=1
 # hist(log(s4$elevation.m.))
 
 mod.s= lm(surv_d~log(elevation.m.)+absolute_latitude, data=s1)
+mod.s= lm(surv_d~poly(log(elevation.m.),2)+absolute_latitude, data=s1)
+
 mod.f= lm(fit_d~log(elevation.m.)+absolute_latitude, data=s4)
 
 anova(mod.s)
@@ -59,7 +61,7 @@ s.plot= ggplot(data=s1, aes(x=log(elevation.m.), y = surv_d, group=1, color=abso
   geom_hline(yintercept=0)+theme_bw(base_size = 16)+theme(legend.position = "bottom")+
   ylab("proportional survival change") +xlab("log(elevation) (m)")+
   scale_colour_gradientn(colours = rev(viridis(20)), name="absolute latitude (°)" )
-#geom_smooth(method="lm",color="grey",se=TRUE)+
+#geom_smooth(method="lm",color="grey",se=TRUE)
 
 #fedundity
 f.plot=ggplot(data=s4, aes(x=log(elevation.m.), y = fit_d, group=1, color=absolute_latitude))+geom_point(size=3)+ylim(-1,1)+#xlim(0,3500)+
@@ -134,7 +136,7 @@ f.long$parameter.lab[f.long$parameter=="S"]<-"survival"
 f.long2= subset(f.long, f.long$site=="beyond")
 #separate geographic / elevation
 f.long2$gradient="elevation"
-f.long2$gradient[f.long2$limit.type=="G"]="geographic"
+f.long2$gradient[f.long2$limit.type=="G"]="latitudinal"
 
 setwd("/Volumes/GoogleDrive/My Drive/Buckley/Work/FitnessContrib_JEB/figures/meta_data/")
 pdf("HargreavesFig.pdf", height = 8, width = 10)
