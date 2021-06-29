@@ -1,4 +1,4 @@
-#Fit TPCs to dodgei hopping data
+#Fit TPCs to M. dodgei hopping data
 
 library(rTPC)
 
